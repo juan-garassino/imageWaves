@@ -23,3 +23,6 @@ mlruns
 
 # IDE #
 *.vscode
+
+# DATA #
+data
