@@ -1,0 +1,10 @@
+# data science
+numpy
+pandas
+scikit-learn
+tensorflow
+keras
+matplotlib
+jupyterlab
+seaborn
+jupyter

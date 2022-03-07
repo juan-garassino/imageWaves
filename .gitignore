@@ -15,6 +15,7 @@ __pycache__
 *PKG-INFO
 *.egg-info
 *.csv
+*.Zone.Identifier*
 *.zip
 05-ML/**/*.txt
 06-Deep-Learning/**/*.txt
@@ -22,7 +23,3 @@ mlruns
 
 # IDE #
 *.vscode
-
-# Identifier #
-
-*Zone*
