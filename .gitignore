@@ -16,6 +16,7 @@ __pycache__
 *.egg-info
 *.csv
 *.Zone.Identifier*
+*.Identifier
 *.zip
 05-ML/**/*.txt
 06-Deep-Learning/**/*.txt
