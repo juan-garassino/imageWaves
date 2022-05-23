@@ -5,10 +5,24 @@ import time
 
 class Sculptor():
     
-    def __init__(self, void_dim, n_elements, element_edge_min, element_edge_max, element_plane_min, element_plane_max, element_volume_min , element_volume_max, step, verbose):
+    def __init__(self, void_dim,
+                 n_edge_elements,
+                 n_plane_elements,
+                 n_volume_elements,
+                 element_edge_min,
+                 element_edge_max,
+                 element_plane_min,
+                 element_plane_max,
+                 element_volume_min,
+                 element_volume_max,
+                 step,
+                 verbose):
         
         self.void = np.zeros((void_dim, void_dim, void_dim))
-        self.n_elements = n_elements
+        self.n_edge_elements = n_edge_elements
+        self.n_plane_elements = n_plane_elements
+        self.n_volume_elements = n_volume_elements
+        self.style = "#ffffff"
         
         self.element_edge_min= element_edge_min
         self.element_edge_max = element_edge_max
@@ -124,7 +138,7 @@ class Sculptor():
         self.element_void = np.zeros((self.element.shape[0]-2, self.element.shape[1]-2))
         self.element_void = np.repeat(self.element_void, repeats=self.depth).reshape((self.element_void.shape[0],self.element_void.shape[1],self.depth))
 
-        # element[1:-1,1:-1,:] = element_void
+        # element[1:-1,1:-1,:] = element_void # elegir pasar el vacio o no como parte del volumen
         
         self.delta = np.array(self.void.shape) - np.array(self.element.shape) # ENCONTRAR LOS NUEVOS DELTAS
 
@@ -165,6 +179,9 @@ class Sculptor():
         
         return self.void
     
+    def add_grill(self):
+        pass
+    
     ### ULTILS ###
     
     def print_information(self):
@@ -180,14 +197,14 @@ class Sculptor():
     
     def plot_sections(self):
         sculpture = self.void
-        fig, axes = plt.subplots(ncols=6, nrows=int(np.ceil(self.void.shape[0]/6)), figsize=(25, 25), facecolor = (STYLE))
+        fig, axes = plt.subplots(ncols=6, nrows=int(np.ceil(self.void.shape[0]/6)), figsize=(25, 25), facecolor = (self.style))
         axes = axes.ravel() # flats
         for index in range(self.void.shape[0]):
             axes[index].imshow(sculpture[index,:,:], cmap = "gray")
             
     def plot_sculpture(self):
         sculpture = self.void
-        fig, axes = plt.subplots(ncols=2, nrows=1, figsize=(25, 25), facecolor = (STYLE), subplot_kw=dict(projection="3d"))
+        fig, axes = plt.subplots(ncols=2, nrows=1, figsize=(25, 25), facecolor = (self.style), subplot_kw=dict(projection="3d"))
         axes = axes.ravel() # flats
         for index in range(1):
             axes[index].voxels(sculpture, facecolors="orange", edgecolors="k", linewidth=0.05)
@@ -195,14 +212,17 @@ class Sculptor():
     ### GENERATOR ###
     
     def generative_sculpt(self):
-        for i in range(self.n_elements):
-            time.sleep(0)
-            self.axis_selection = np.random.randint(low=0, high=3)
-            self.add_plane()
+        start = time.time()
+        for edge in range(self.n_edge_elements):
             self.axis_selection = np.random.randint(low=0, high=3)
             self.add_edge()
-
-        for i in range(self.n_elements):
+            
+        for plane in range(self.n_plane_elements):
+            self.axis_selection = np.random.randint(low=0, high=3)
+            self.add_plane()
+            
+        for volume in range(self.n_volume_elements):
             self.add_pipe_cantilever()
-
+            
+        print ('Time for sculptures is {} sec'.format(time.time()-start))
         return self.void
